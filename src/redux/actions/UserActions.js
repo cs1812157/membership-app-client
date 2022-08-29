@@ -16,6 +16,7 @@ import {
     USER_UPDATE_ACCOUNT_SUCCESS,
     USER_NEW_PASSWORD_REQUEST,
     USER_NEW_PASSWORD_SUCCESS,
+    USER_NEW_PASSWORD_FAIL,
 } from "../constants/UserConstants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -118,12 +119,14 @@ export const userResetPasswordAction = (email) => async (dispatch) => {
         dispatch({ type: USER_RESET_PASSWORD_SUCCESS, payload: data });
         toast.success("Reset password link sent");
     } catch (error) {
-        const message =
-            error.response && error.response.data.message
-                ? error.response.data.message
-                : error.message;
-        dispatch({ type: USER_RESET_PASSWORD_FAIL, payload: message });
-        toast.error("Reset password fail");
+        dispatch({
+            type: USER_RESET_PASSWORD_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+        toast.error("Reset password failed");
     }
 };
 
@@ -140,11 +143,13 @@ export const userNewPasswordAction = (token, password) => async (dispatch) => {
         dispatch({ type: USER_NEW_PASSWORD_SUCCESS, payload: data });
         toast.success("Password change success");
     } catch (error) {
-        const message =
-            error.response && error.response.data.message
-                ? error.response.data.message
-                : error.message;
-        dispatch({ type: USER_RESET_PASSWORD_FAIL, payload: message });
-        toast.error("New password fail");
+        dispatch({
+            type: USER_NEW_PASSWORD_FAIL,
+            payload:
+                error.response && error.response.data.message
+                    ? error.response.data.message
+                    : error.message,
+        });
+        toast.error("New password failed");
     }
 };
