@@ -20,12 +20,11 @@ import {
 } from "../constants/UserConstants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { baseurl } from "./config";
 
 export const userLoginAction = (email, password) => async (dispatch) => {
     dispatch({ type: USER_LOGIN_REQUEST, payload: { email, password } });
     try {
-        const { data } = await Axios.post(`http://${baseurl}/api/users/login`, {
+        const { data } = await Axios.post(`/api/users/login`, {
             email,
             password,
         });
@@ -59,7 +58,7 @@ export const userRegisterAction =
         });
         try {
             const { data } = await Axios.post(
-                `http://${baseurl}/api/users/register`,
+                `/api/users/register`,
                 {
                     name,
                     email,
@@ -89,7 +88,7 @@ export const userUpdateAccountAction = (user) => async (dispatch, getState) => {
     } = getState();
     try {
         const { data } = await Axios.put(
-            `http://${baseurl}/api/users/update-account`,
+            `/api/users/update-account`,
             user,
             {
                 headers: { Authorization: `Bearer ${userData.token}` },
@@ -113,7 +112,7 @@ export const userResetPasswordAction = (email) => async (dispatch) => {
     dispatch({ type: USER_RESET_PASSWORD_REQUEST, payload: email });
     try {
         const { data } = await Axios.post(
-            `http://${baseurl}/api/users/reset-password`,
+            `/api/users/reset-password`,
             { email }
         );
         dispatch({ type: USER_RESET_PASSWORD_SUCCESS, payload: data });
@@ -134,7 +133,7 @@ export const userNewPasswordAction = (token, password) => async (dispatch) => {
     dispatch({ type: USER_NEW_PASSWORD_REQUEST, payload: token });
     try {
         const { data } = await Axios.post(
-            `http://${baseurl}/api/users/new-password`,
+            `/api/users/new-password`,
             {
                 token,
                 password,
