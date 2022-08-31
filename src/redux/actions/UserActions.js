@@ -23,14 +23,12 @@ import {
 } from "../constants/UserConstants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { local } from "../config/config";
-import { baseurl } from "../config/config";
 
 export const userLoginAction = (email, password) => async (dispatch) => {
     dispatch({ type: USER_LOGIN_REQUEST, payload: { email, password } });
     try {
         const { data } = await Axios.post(
-            `${local === true && baseurl}/api/users/login`,
+            `/api/users/login`,
             {
                 email,
                 password,
@@ -66,7 +64,7 @@ export const userRegisterAction =
         });
         try {
             const { data } = await Axios.post(
-                `${local === true && baseurl}/api/users/register`,
+                `/api/users/register`,
                 {
                     name,
                     email,
@@ -94,7 +92,7 @@ export const userUpdateAccountAction = (user) => async (dispatch, getState) => {
     } = getState();
     try {
         const { data } = await Axios.put(
-            `${local === true && baseurl}/api/users/update-account`,
+            `/api/users/update-account`,
             user,
             {
                 headers: { Authorization: `Bearer ${userData.token}` },
@@ -118,7 +116,7 @@ export const userResetPasswordAction = (email) => async (dispatch) => {
     dispatch({ type: USER_RESET_PASSWORD_REQUEST, payload: email });
     try {
         const { data } = await Axios.post(
-            `${local === true && baseurl}/api/users/reset-password`,
+            `/api/users/reset-password`,
             {
                 email,
             }
@@ -142,7 +140,7 @@ export const userNewPasswordAction =
         dispatch({ type: USER_NEW_PASSWORD_REQUEST, payload: passwordToken });
         try {
             const { data } = await Axios.post(
-                `${local === true && baseurl}/api/users/new-password`,
+                `/api/users/new-password`,
                 {
                     passwordToken,
                     password,
@@ -166,7 +164,7 @@ export const userVerifyAccountAction = (registerToken) => async (dispatch) => {
     dispatch({ type: USER_VERIFY_ACCOUNT_REQUEST, payload: registerToken });
     try {
         const { data } = await Axios.post(
-            `${local === true && baseurl}/api/users/verify-account`,
+            `/api/users/verify-account`,
             {
                 registerToken,
             }
