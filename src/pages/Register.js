@@ -7,10 +7,10 @@ import { userRegisterAction } from "../redux/actions/UserActions";
 const Register = () => {
     const dispatch = useDispatch();
 
-    const { userData: userDataRegister, loading, error } = useSelector(
+    const { userData } = useSelector((state) => state.userLoginData);
+    const { message, loading, error } = useSelector(
         (state) => state.userRegisterData
     );
-    const { userData } = useSelector((state) => state.userLoginData);
 
     const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ const Register = () => {
             errorMessage:
                 "Full name should be between 3-50 characters and alphabets only",
             pattern: "^[a-zA-z]+([\\s][a-zA-Z]+)*$",
-                required: true,
+            required: true,
         },
         {
             id: 3,
@@ -97,10 +97,16 @@ const Register = () => {
     };
 
     useEffect(() => {
-        if (userDataRegister || userData) {
+        if (userData) {
             navigate("/dashboard");
         }
-    }, [navigate, userDataRegister, userData]);
+    }, [navigate, userData]);
+
+    useEffect(() => {
+        if (message) {
+            navigate("/login");
+        }
+    }, [navigate, message]);
 
     return (
         <div className="sign">
@@ -110,7 +116,9 @@ const Register = () => {
                         <span className="material-symbols-sharp">person</span>
                         <h2>Register</h2>
                     </div>
-                    <div className="status danger">{error && <span>{error}</span>}</div>
+                    <div className="status danger">
+                        {error && <span>{error}</span>}
+                    </div>
                 </div>
                 <div>
                     <form onSubmit={submitHandler}>
@@ -139,9 +147,12 @@ const Register = () => {
                             </div>
                         ))}
                         <section className="links">
-                            <section>Already have an account? <Link to="/login">Login</Link></section>
+                            <section>
+                                Already have an account?{" "}
+                                <Link to="/login">Login</Link>
+                            </section>
                         </section>
-                        <button type="submit" className="btn-primary">
+                        <button type="submit" className="btn-primary btn-form">
                             {loading ? (
                                 <ClipLoader color={"white"} size={35} />
                             ) : (

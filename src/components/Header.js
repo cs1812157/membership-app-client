@@ -1,7 +1,9 @@
 import React from "react";
-import logo from "../logo.svg";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 export default function Header() {
+    const { userData } = useSelector((state) => state.userLoginData);
     return (
         <div className="header">
             <div>
@@ -9,9 +11,14 @@ export default function Header() {
                     Funland <span className="danger">Prizes</span>
                 </h1>
             </div>
-            <div>
-                <img src={logo} alt="funlandprizes"></img>
-            </div>
+            {!userData && (
+                <div>
+                    <Link to="/login">Login</Link>
+                    <Link to="/register">
+                        <button className="btn-primary">Get Started</button>
+                    </Link>
+                </div>
+            )}
         </div>
     );
 }

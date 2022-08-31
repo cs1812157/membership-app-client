@@ -3,6 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { userLoginAction } from "../redux/actions/UserActions";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Link, useNavigate } from "react-router-dom";
+import {
+    USER_LOGOUT,
+    USER_NEW_PASSWORD_RESET,
+    USER_REGISTER_RESET,
+    USER_RESET_PASSWORD_RESET,
+} from "../redux/constants/UserConstants";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -10,6 +16,31 @@ const Login = () => {
     const { userData, loading, error } = useSelector(
         (state) => state.userLoginData
     );
+    const { message: messageRegister } = useSelector(
+        (state) => state.userRegisterData
+    );
+    const { message: messageResetPassword } = useSelector(
+        (state) => state.userResetPasswordData
+    );
+    const { message: messageNewPassword } = useSelector(
+        (state) => state.userNewPasswordData
+    );
+    const [messages, setMessages] = useState({
+        register: messageRegister || "",
+        resetPassword: messageResetPassword || "",
+        newPassword: messageNewPassword || "",
+    });
+    useEffect(() => {
+        if (messageRegister) {
+            setMessages({ ...messages, register: messageRegister });
+        }
+        if (messageResetPassword) {
+            setMessages({ ...messages, resetPassword: messageResetPassword });
+        }
+        if (messageNewPassword) {
+            setMessages({ ...messages, newPassword: messageNewPassword });
+        }
+    }, [messages, messageRegister, messageResetPassword, messageNewPassword]);
 
     const navigate = useNavigate();
 
@@ -55,14 +86,20 @@ const Login = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
+        setMessages(undefined);
         dispatch(userLoginAction(formValues.email, formValues.password));
     };
 
     useEffect(() => {
         if (userData) {
             navigate("/dashboard");
+        } else {
+            dispatch({ type: USER_LOGOUT });
+            dispatch({ type: USER_REGISTER_RESET });
+            dispatch({ type: USER_RESET_PASSWORD_RESET });
+            dispatch({ type: USER_NEW_PASSWORD_RESET });
         }
-    }, [navigate, userData]);
+    }, [navigate, userData, dispatch]);
 
     return (
         <div className="sign">
@@ -72,7 +109,22 @@ const Login = () => {
                         <span className="material-symbols-sharp">person</span>
                         <h2>Login</h2>
                     </div>
-                    <div className="status danger">{error && <span>{error}</span>}</div>
+                    <div className="status danger">
+                        {error && <span>{error}</span>}
+                    </div>
+                    <div className="status success">
+                        {messages?.register && <span>{messages?.register}</span>}
+                    </div>
+                    <div className="status success">
+                        {messages?.resetPassword && (
+                            <span>{messages?.resetPassword}</span>
+                        )}
+                    </div>
+                    <div className="status success">
+                        {messages?.newPassword && (
+                            <span>{messages.newPassword}</span>
+                        )}
+                    </div>
                 </div>
                 <div>
                     <form onSubmit={submitHandler}>
@@ -101,10 +153,16 @@ const Login = () => {
                             </div>
                         ))}
                         <section className="links">
-                            <section>Don't have an account yet? <Link to="/register">Register</Link></section>
-                            <section>Forgot your password? <Link to="/reset-password">Reset Password</Link></section>
+                            <section>
+                                Don't have an account yet?{" "}
+                                <Link to="/register">Register</Link>
+                            </section>
+                            <section>
+                                Forgot your password?{" "}
+                                <Link to="/reset-password">Reset Password</Link>
+                            </section>
                         </section>
-                        <button type="submit" className="btn-primary">
+                        <button type="submit" className="btn-primary btn-form">
                             {loading ? (
                                 <ClipLoader color={"white"} size={35} />
                             ) : (

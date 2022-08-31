@@ -17,19 +17,27 @@ import {
     USER_NEW_PASSWORD_REQUEST,
     USER_NEW_PASSWORD_SUCCESS,
     USER_NEW_PASSWORD_FAIL,
+    USER_VERIFY_ACCOUNT_SUCCESS,
+    USER_VERIFY_ACCOUNT_FAIL,
+    USER_VERIFY_ACCOUNT_REQUEST,
 } from "../constants/UserConstants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { baseurl } from "../config/config";
+import { local } from "../config/config";
 
 export const userLoginAction = (email, password) => async (dispatch) => {
     dispatch({ type: USER_LOGIN_REQUEST, payload: { email, password } });
     try {
-        const { data } = await Axios.post(`/api/users/login`, {
-            email,
-            password,
-        });
+        const { data } = await Axios.post(
+            `${local && baseurl}/api/users/login`,
+            {
+                email,
+                password,
+            }
+        );
         dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-        toast.success("Login Success");
+        toast.success("Login success");
         localStorage.setItem("userData", JSON.stringify(data));
     } catch (error) {
         dispatch({
@@ -39,7 +47,7 @@ export const userLoginAction = (email, password) => async (dispatch) => {
                     ? error.response.data.message
                     : error.message,
         });
-        toast.error("Login failed");
+        toast.error("Login fail");
     }
 };
 
@@ -58,7 +66,7 @@ export const userRegisterAction =
         });
         try {
             const { data } = await Axios.post(
-                `/api/users/register`,
+                `${local && baseurl}/api/users/register`,
                 {
                     name,
                     email,
@@ -66,9 +74,7 @@ export const userRegisterAction =
                 }
             );
             dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
-            dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-            localStorage.setItem("userData", JSON.stringify(data));
-            toast.success("Registration successfull");
+            toast.success("Registration success");
         } catch (error) {
             dispatch({
                 type: USER_REGISTER_FAIL,
@@ -77,7 +83,7 @@ export const userRegisterAction =
                         ? error.response.data.message
                         : error.message,
             });
-            toast.error("Registration failed");
+            toast.error("Registration fail");
         }
     };
 
@@ -88,7 +94,7 @@ export const userUpdateAccountAction = (user) => async (dispatch, getState) => {
     } = getState();
     try {
         const { data } = await Axios.put(
-            `/api/users/update-account`,
+            `${local && baseurl}/api/users/update-account`,
             user,
             {
                 headers: { Authorization: `Bearer ${userData.token}` },
@@ -97,14 +103,14 @@ export const userUpdateAccountAction = (user) => async (dispatch, getState) => {
         dispatch({ type: USER_UPDATE_ACCOUNT_SUCCESS, payload: data });
         dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
         localStorage.setItem("userData", JSON.stringify(data));
-        toast.success("Account update successfull");
+        toast.success("Account update success");
     } catch (error) {
         const message =
             error.response && error.response.data.message
                 ? error.response.data.message
                 : error.message;
         dispatch({ type: USER_UPDATE_ACCOUNT_FAIL, payload: message });
-        toast.error("Account update failed");
+        toast.error("Account update fail");
     }
 };
 
@@ -112,8 +118,10 @@ export const userResetPasswordAction = (email) => async (dispatch) => {
     dispatch({ type: USER_RESET_PASSWORD_REQUEST, payload: email });
     try {
         const { data } = await Axios.post(
-            `/api/users/reset-password`,
-            { email }
+            `${local && baseurl}/api/users/reset-password`,
+            {
+                email,
+            }
         );
         dispatch({ type: USER_RESET_PASSWORD_SUCCESS, payload: data });
         toast.success("Reset password link sent");
@@ -125,30 +133,54 @@ export const userResetPasswordAction = (email) => async (dispatch) => {
                     ? error.response.data.message
                     : error.message,
         });
-        toast.error("Reset password failed");
+        toast.error("Reset password fail");
     }
 };
 
-export const userNewPasswordAction = (token, password) => async (dispatch) => {
-    dispatch({ type: USER_NEW_PASSWORD_REQUEST, payload: token });
+export const userNewPasswordAction =
+    (passwordToken, password) => async (dispatch) => {
+        dispatch({ type: USER_NEW_PASSWORD_REQUEST, payload: passwordToken });
+        try {
+            const { data } = await Axios.post(
+                `${local && baseurl}/api/users/new-password`,
+                {
+                    passwordToken,
+                    password,
+                }
+            );
+            dispatch({ type: USER_NEW_PASSWORD_SUCCESS, payload: data });
+            toast.success("Password change success");
+        } catch (error) {
+            dispatch({
+                type: USER_NEW_PASSWORD_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message,
+            });
+            toast.error("Password change fail");
+        }
+    };
+
+export const userVerifyAccountAction = (registerToken) => async (dispatch) => {
+    dispatch({ type: USER_VERIFY_ACCOUNT_REQUEST, payload: registerToken });
     try {
         const { data } = await Axios.post(
-            `/api/users/new-password`,
+            `${local && baseurl}/api/users/verify-account`,
             {
-                token,
-                password,
+                registerToken,
             }
         );
-        dispatch({ type: USER_NEW_PASSWORD_SUCCESS, payload: data });
-        toast.success("Password change success");
+        dispatch({ type: USER_VERIFY_ACCOUNT_SUCCESS, payload: data });
+        toast.success("Account verify success");
     } catch (error) {
         dispatch({
-            type: USER_NEW_PASSWORD_FAIL,
+            type: USER_VERIFY_ACCOUNT_FAIL,
             payload:
                 error.response && error.response.data.message
                     ? error.response.data.message
                     : error.message,
         });
-        toast.error("New password failed");
+        toast.error("Account verify fail");
     }
 };

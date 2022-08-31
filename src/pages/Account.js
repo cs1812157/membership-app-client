@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
-import { ToastContainer } from "react-toastify";
 import Wrapper from "../components/Wrapper";
 import { userUpdateAccountAction } from "../redux/actions/UserActions";
 
@@ -18,6 +17,7 @@ const Account = () => {
         email: "",
         password: "",
         confirmPassword: "",
+        currentPassword: "",
     };
 
     const [formValues, setFormValues] = useState(initialFormValues);
@@ -35,7 +35,7 @@ const Account = () => {
             pattern: "^[a-zA-z]+([\\s][a-zA-Z]+)*$",
         },
         {
-            id: 3,
+            id: 2,
             label: "Email",
             labelFor: "email",
             name: "email",
@@ -44,7 +44,7 @@ const Account = () => {
             errorMessage: "Invalid email address",
         },
         {
-            id: 4,
+            id: 3,
             label: "Password",
             labelFor: "password",
             name: "password",
@@ -55,7 +55,7 @@ const Account = () => {
             pattern: `^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[ !@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$`,
         },
         {
-            id: 5,
+            id: 4,
             label: "Confirm Password",
             labelFor: "confirmPassword",
             name: "confirmPassword",
@@ -64,6 +64,18 @@ const Account = () => {
             errorMessage: "Password and confirm password should be same",
             pattern: `${formValues.password}`,
             required: formValues.password.length >= 1 ? true : false,
+        },
+        {
+            id: 5,
+            label: "Current Password",
+            labelFor: "currentPassword",
+            name: "currentPassword",
+            type: "password",
+            placeholder: "Enter your current password",
+            errorMessage:
+                "Password should be between 8-20 characters and must contain at least 1 letter, 1 number and 1 special character",
+            pattern: `^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[ !@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$`,
+            required: true,
         },
     ];
 
@@ -100,8 +112,15 @@ const Account = () => {
                 name: formValues.name,
                 email: formValues.email,
                 password: formValues.password,
+                currentPassword: formValues.currentPassword,
             })
         );
+        setFormValues({
+            ...formValues,
+            password: "",
+            confirmPassword: "",
+            currentPassword: "",
+        });
     };
     return (
         <Wrapper>
@@ -147,7 +166,10 @@ const Account = () => {
                                     <span>{input.errorMessage}</span>
                                 </div>
                             ))}
-                            <button type="submit" className="btn-primary">
+                            <button
+                                type="submit"
+                                className="btn-primary btn-form"
+                            >
                                 {loading ? (
                                     <ClipLoader color={"white"} size={35} />
                                 ) : (
@@ -158,7 +180,6 @@ const Account = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer position="top-right" className="toastify" />
         </Wrapper>
     );
 };

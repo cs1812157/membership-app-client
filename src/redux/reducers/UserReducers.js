@@ -19,6 +19,10 @@ import {
     USER_NEW_PASSWORD_SUCCESS,
     USER_NEW_PASSWORD_FAIL,
     USER_NEW_PASSWORD_RESET,
+    USER_VERIFY_ACCOUNT_RESET,
+    USER_VERIFY_ACCOUNT_FAIL,
+    USER_VERIFY_ACCOUNT_SUCCESS,
+    USER_VERIFY_ACCOUNT_REQUEST,
 } from "../constants/UserConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -41,7 +45,7 @@ export const userRegisterReducer = (state = {}, action) => {
         case USER_REGISTER_REQUEST:
             return { loading: true };
         case USER_REGISTER_SUCCESS:
-            return { loading: false, userData: action.payload };
+            return { loading: false, message: action.payload };
         case USER_REGISTER_FAIL:
             return { loading: false, error: action.payload };
         case USER_REGISTER_RESET:
@@ -90,6 +94,21 @@ export const userNewPasswordReducer = (state = {}, action) => {
         case USER_NEW_PASSWORD_FAIL:
             return { loading: false, error: action.payload };
         case USER_NEW_PASSWORD_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const userVerifyAccountReducer = (state = {}, action) => {
+    switch (action.type) {
+        case USER_VERIFY_ACCOUNT_REQUEST:
+            return { loading: true };
+        case USER_VERIFY_ACCOUNT_SUCCESS:
+            return { loading: false, message: action.payload };
+        case USER_VERIFY_ACCOUNT_FAIL:
+            return { loading: false, error: action.payload };
+        case USER_VERIFY_ACCOUNT_RESET:
             return {};
         default:
             return state;

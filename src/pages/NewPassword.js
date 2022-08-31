@@ -6,13 +6,13 @@ import { userNewPasswordAction } from "../redux/actions/UserActions";
 import { useParams } from "react-router-dom";
 
 const NewPassword = () => {
-    let { token } = useParams();
+    let { passwordToken } = useParams();
 
     const dispatch = useDispatch();
 
     const { userData } = useSelector((state) => state.userLoginData);
     const { message, loading, error } = useSelector(
-        (state) => state.userResetPasswordData
+        (state) => state.userNewPasswordData
     );
 
     const navigate = useNavigate();
@@ -61,7 +61,7 @@ const NewPassword = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        dispatch(userNewPasswordAction(token, formValues.newPassword));
+        dispatch(userNewPasswordAction(passwordToken, formValues.newPassword));
     };
 
     useEffect(() => {
@@ -69,6 +69,12 @@ const NewPassword = () => {
             navigate("/login");
         }
     }, [navigate, userData]);
+
+    useEffect(() => {
+        if (message) {
+            navigate("/login");
+        }
+    }, [navigate, message]);
 
     return (
         <div className="sign">
@@ -78,9 +84,16 @@ const NewPassword = () => {
                         <span className="material-symbols-sharp">person</span>
                         <h2>New Password</h2>
                     </div>
-                    <div className={error ? "danger" : message ? "success" : ""}>
+                    <div
+                        className={
+                            error
+                                ? "status danger"
+                                : message
+                                ? "status success"
+                                : ""
+                        }
+                    >
                         {error && <span>{error}</span>}
-                        {message && <span>{message}</span>}
                     </div>
                 </div>
                 <div>
@@ -109,7 +122,7 @@ const NewPassword = () => {
                                 <span>{input.errorMessage}</span>
                             </div>
                         ))}
-                        <button type="submit" className="btn-primary">
+                        <button type="submit" className="btn-primary btn-form">
                             {loading ? (
                                 <ClipLoader color={"white"} size={35} />
                             ) : (

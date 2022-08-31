@@ -52,6 +52,11 @@ const ResetPassword = () => {
             navigate("/dashboard");
         }
     }, [navigate, userData]);
+    useEffect(() => {
+        if (message) {
+            navigate("/login");
+        }
+    }, [navigate, message]);
 
     return (
         <div className="sign">
@@ -61,9 +66,16 @@ const ResetPassword = () => {
                         <span className="material-symbols-sharp">person</span>
                         <h2>Reset Password</h2>
                     </div>
-                    <div className={error ? "status danger" : message ? "status success" : ""}>
+                    <div
+                        className={
+                            error
+                                ? "status danger"
+                                : message
+                                ? "status success"
+                                : ""
+                        }
+                    >
                         {error && <span>{error}</span>}
-                        {message && <span>{message}</span>}
                     </div>
                 </div>
                 <div>
@@ -92,7 +104,7 @@ const ResetPassword = () => {
                                 <span>{input.errorMessage}</span>
                             </div>
                         ))}
-                        <button type="submit" className="btn-primary">
+                        <button type="submit" className="btn-primary btn-form">
                             {loading ? (
                                 <ClipLoader color={"white"} size={35} />
                             ) : (

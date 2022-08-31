@@ -9,6 +9,8 @@ import ResetPassword from "./pages/ResetPassword";
 import NewPassword from "./pages/NewPassword";
 import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
+import NotFound from "./pages/NotFound";
+import VerifyAccount from "./pages/VerifyAccount";
 
 function App() {
     return (
@@ -32,8 +34,20 @@ function App() {
                                 element={<ResetPassword></ResetPassword>}
                             ></Route>
                             <Route
-                                path="/new-password/:token"
+                                path="/new-password/:passwordToken"
                                 element={<NewPassword></NewPassword>}
+                            ></Route>
+                            <Route
+                                path="/verify-account/:registerToken"
+                                element={<VerifyAccount></VerifyAccount>}
+                            ></Route>
+                            <Route
+                                path="*"
+                                element={<NotFound></NotFound>}
+                            ></Route>
+                            <Route
+                                path="/notfound"
+                                element={<NotFound></NotFound>}
                             ></Route>
                             <Route element={<ProtectedRoute />}>
                                 <Route
@@ -48,7 +62,11 @@ function App() {
                         </Routes>
                     </main>
                 </div>
-                <ToastContainer position="top-right" className="toastify"/>
+                <ToastContainer
+                    position="top-right"
+                    autoClose="3000"
+                    className="toastify"
+                />
             </BrowserRouter>
         </div>
     );
