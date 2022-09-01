@@ -94,6 +94,11 @@ const Register = () => {
                 formValues.password
             )
         );
+        setFormValues({
+            ...formValues,
+            password: "",
+            confirmPassword: ""
+        });
     };
 
     useEffect(() => {
