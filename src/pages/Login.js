@@ -8,6 +8,7 @@ import {
     USER_NEW_PASSWORD_RESET,
     USER_REGISTER_RESET,
     USER_RESET_PASSWORD_RESET,
+    USER_VERIFY_ACCOUNT_RESET,
 } from "../redux/constants/UserConstants";
 
 const Login = () => {
@@ -25,10 +26,14 @@ const Login = () => {
     const { message: messageNewPassword } = useSelector(
         (state) => state.userNewPasswordData
     );
+    const { message: messageVerifyAccount } = useSelector(
+        (state) => state.userVerifyAccountData
+    );
     const [messages, setMessages] = useState({
-        register: messageRegister || "",
-        resetPassword: messageResetPassword || "",
-        newPassword: messageNewPassword || "",
+        register: "",
+        resetPassword: "",
+        newPassword: "",
+        verifyAccount: "",
     });
     useEffect(() => {
         if (messageRegister) {
@@ -40,7 +45,16 @@ const Login = () => {
         if (messageNewPassword) {
             setMessages({ ...messages, newPassword: messageNewPassword });
         }
-    }, [messages, messageRegister, messageResetPassword, messageNewPassword]);
+        if (messageVerifyAccount) {
+            setMessages({ ...messages, verifyAccount: messageVerifyAccount });
+        }
+    }, [
+        messages,
+        messageRegister,
+        messageResetPassword,
+        messageNewPassword,
+        messageVerifyAccount,
+    ]);
 
     const navigate = useNavigate();
 
@@ -98,6 +112,7 @@ const Login = () => {
             dispatch({ type: USER_REGISTER_RESET });
             dispatch({ type: USER_RESET_PASSWORD_RESET });
             dispatch({ type: USER_NEW_PASSWORD_RESET });
+            dispatch({ type: USER_VERIFY_ACCOUNT_RESET });
         }
     }, [navigate, userData, dispatch]);
 
@@ -113,7 +128,9 @@ const Login = () => {
                         {error && <span>{error}</span>}
                     </div>
                     <div className="status success">
-                        {messages?.register && <span>{messages?.register}</span>}
+                        {messages?.register && (
+                            <span>{messages?.register}</span>
+                        )}
                     </div>
                     <div className="status success">
                         {messages?.resetPassword && (
@@ -122,7 +139,12 @@ const Login = () => {
                     </div>
                     <div className="status success">
                         {messages?.newPassword && (
-                            <span>{messages.newPassword}</span>
+                            <span>{messages?.newPassword}</span>
+                        )}
+                    </div>
+                    <div className="status success">
+                        {messages?.verifyAccount && (
+                            <span>{messages?.verifyAccount}</span>
                         )}
                     </div>
                 </div>

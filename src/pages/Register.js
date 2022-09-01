@@ -96,8 +96,8 @@ const Register = () => {
         );
         setFormValues({
             ...formValues,
-            password: "",
-            confirmPassword: ""
+            password: undefined,
+            confirmPassword: undefined
         });
     };
 
