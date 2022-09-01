@@ -38,15 +38,19 @@ const Login = () => {
     useEffect(() => {
         if (messageRegister) {
             setMessages({ ...messages, register: messageRegister });
+            dispatch({ type: USER_REGISTER_RESET });
         }
         if (messageResetPassword) {
             setMessages({ ...messages, resetPassword: messageResetPassword });
+            dispatch({ type: USER_RESET_PASSWORD_RESET });
         }
         if (messageNewPassword) {
             setMessages({ ...messages, newPassword: messageNewPassword });
+            dispatch({ type: USER_NEW_PASSWORD_RESET });
         }
         if (messageVerifyAccount) {
             setMessages({ ...messages, verifyAccount: messageVerifyAccount });
+            dispatch({ type: USER_VERIFY_ACCOUNT_RESET });
         }
     }, [
         messages,
@@ -54,6 +58,7 @@ const Login = () => {
         messageResetPassword,
         messageNewPassword,
         messageVerifyAccount,
+        dispatch,
     ]);
 
     const navigate = useNavigate();
@@ -102,17 +107,20 @@ const Login = () => {
         e.preventDefault();
         setMessages(undefined);
         dispatch(userLoginAction(formValues.email, formValues.password));
+        setFocused([]);
+        setFormValues({
+            ...formValues,
+            password: "",
+            confirmPassword: "",
+        });
     };
 
     useEffect(() => {
         if (userData) {
             navigate("/dashboard");
         } else {
+            // TODO: Remove them if they're not useful
             dispatch({ type: USER_LOGOUT });
-            dispatch({ type: USER_REGISTER_RESET });
-            dispatch({ type: USER_RESET_PASSWORD_RESET });
-            dispatch({ type: USER_NEW_PASSWORD_RESET });
-            dispatch({ type: USER_VERIFY_ACCOUNT_RESET });
         }
     }, [navigate, userData, dispatch]);
 

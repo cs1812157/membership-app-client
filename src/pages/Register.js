@@ -94,10 +94,11 @@ const Register = () => {
                 formValues.password
             )
         );
+        setFocused([]);
         setFormValues({
             ...formValues,
-            password: undefined,
-            confirmPassword: undefined
+            password: "",
+            confirmPassword: "",
         });
     };
 

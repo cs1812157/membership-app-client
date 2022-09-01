@@ -15,7 +15,7 @@ const Account = () => {
     const initialFormValues = {
         name: "",
         email: "",
-        password: "",
+        newPassword: "",
         confirmPassword: "",
         currentPassword: "",
     };
@@ -45,11 +45,11 @@ const Account = () => {
         },
         {
             id: 3,
-            label: "Password",
-            labelFor: "password",
-            name: "password",
+            label: "New Password",
+            labelFor: "newPassword",
+            name: "newPassword",
             type: "password",
-            placeholder: "Enter your password",
+            placeholder: "Enter your new password",
             errorMessage:
                 "Password should be between 8-20 characters and must contain at least 1 letter, 1 number and 1 special character",
             pattern: `^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[ !@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$`,
@@ -62,8 +62,8 @@ const Account = () => {
             type: "password",
             placeholder: "Confirm your password",
             errorMessage: "Password and confirm password should be same",
-            pattern: `${formValues.password}`,
-            required: formValues.password.length >= 1 ? true : false,
+            pattern: `${formValues.newPassword}`,
+            required: formValues.newPassword.length >= 1 ? true : false,
         },
         {
             id: 5,
@@ -111,13 +111,14 @@ const Account = () => {
                 userID: userData._id,
                 name: formValues.name,
                 email: formValues.email,
-                password: formValues.password,
+                newPassword: formValues.newPassword,
                 currentPassword: formValues.currentPassword,
             })
         );
+        setFocused([]);
         setFormValues({
             ...formValues,
-            password: "",
+            newPassword: "",
             confirmPassword: "",
             currentPassword: "",
         });
