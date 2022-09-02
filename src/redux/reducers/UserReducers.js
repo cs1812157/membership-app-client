@@ -23,6 +23,10 @@ import {
     USER_VERIFY_ACCOUNT_FAIL,
     USER_VERIFY_ACCOUNT_SUCCESS,
     USER_VERIFY_ACCOUNT_REQUEST,
+    USER_UPLOAD_PROFILE_PICTURE_REQUEST,
+    USER_UPLOAD_PROFILE_PICTURE_SUCCESS,
+    USER_UPLOAD_PROFILE_PICTURE_FAIL,
+    USER_UPLOAD_PROFILE_PICTURE_RESET,
 } from "../constants/UserConstants";
 
 export const userLoginReducer = (state = {}, action) => {
@@ -109,6 +113,21 @@ export const userVerifyAccountReducer = (state = {}, action) => {
         case USER_VERIFY_ACCOUNT_FAIL:
             return { loading: false, error: action.payload };
         case USER_VERIFY_ACCOUNT_RESET:
+            return {};
+        default:
+            return state;
+    }
+};
+
+export const userUploadProfilePictureReducer = (state = {}, action) => {
+    switch (action.type) {
+        case USER_UPLOAD_PROFILE_PICTURE_REQUEST:
+            return { loading: true };
+        case USER_UPLOAD_PROFILE_PICTURE_SUCCESS:
+            return { loading: false, image: action.payload };
+        case USER_UPLOAD_PROFILE_PICTURE_FAIL:
+            return { loading: false, error: action.payload };
+        case USER_UPLOAD_PROFILE_PICTURE_RESET:
             return {};
         default:
             return state;

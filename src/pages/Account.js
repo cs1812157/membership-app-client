@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClipLoader from "react-spinners/ClipLoader";
 import Wrapper from "../components/Wrapper";
-import { userUpdateAccountAction } from "../redux/actions/UserActions";
+import { baseurl2 } from "../config/config";
+import {
+    userUpdateAccountAction,
+    userUpdateProfilePictureAction,
+} from "../redux/actions/UserActions";
 
 const Account = () => {
     const dispatch = useDispatch();
@@ -11,8 +15,10 @@ const Account = () => {
     const { loading, error } = useSelector(
         (state) => state.userUpdateAccountData
     );
+    const { image } = useSelector((state) => state.userUploadProfilePictureData);
 
     const initialFormValues = {
+        image: "",
         name: "",
         email: "",
         newPassword: "",
@@ -83,6 +89,7 @@ const Account = () => {
         if (userData) {
             setFormValues({
                 ...formValues,
+                image: userData.image,
                 name: userData.name,
                 email: userData.email,
             });
@@ -90,11 +97,27 @@ const Account = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [userData]);
 
+    useEffect(() => {
+        if (image) {
+            setFormValues({ ...formValues, image: image });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [image]);
+
     const [focused, setFocused] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues({ ...formValues, [name]: value });
+    };
+
+    const handleProfilePicture = (e) => {
+        const file = e.target.files[0];
+        if (file.size > 200 * 1024) {
+            alert("File size should be less than 200 kb");
+        } else {
+            dispatch(userUpdateProfilePictureAction(file));
+        }
     };
 
     const handleFocus = (e) => {
@@ -123,6 +146,7 @@ const Account = () => {
             currentPassword: "",
         });
     };
+
     return (
         <Wrapper>
             <div className="account">
@@ -141,6 +165,40 @@ const Account = () => {
                     </div>
                     <div>
                         <form onSubmit={submitHandler}>
+                            <div className="wrapper-profilePicture">
+                                <img
+                                    src={
+                                        formValues.image
+                                            ? baseurl2 + formValues.image
+                                            : `${baseurl2}/uploads/empty.jpg`
+                                    }
+                                    alt="img"
+                                ></img>
+                                <input
+                                    type="file"
+                                    className="input-profilePicture"
+                                    id="profilePicture"
+                                    name="profilePicture"
+                                    onChange={handleProfilePicture}
+                                    restrictions={{
+                                        maxFileSize: 10,
+                                    }}
+                                ></input>
+                            </div>
+                            {/* <div>
+                                <label htmlFor="profilePicture">
+                                    Profile Picture
+                                </label>
+                                <input
+                                    type="file"
+                                    id="profilePicture"
+                                    name="profilePicture"
+                                    onChange={handleProfilePicture}
+                                    restrictions={{
+                                        maxFileSize: 10,
+                                    }}
+                                ></input>
+                            </div> */}
                             {inputs.map((input) => (
                                 <div key={input.id}>
                                     <label htmlFor={input.labelFor}>

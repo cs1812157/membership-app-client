@@ -20,11 +20,14 @@ import {
     USER_VERIFY_ACCOUNT_SUCCESS,
     USER_VERIFY_ACCOUNT_FAIL,
     USER_VERIFY_ACCOUNT_REQUEST,
+    USER_UPLOAD_PROFILE_PICTURE_FAIL,
+    USER_UPLOAD_PROFILE_PICTURE_SUCCESS,
+    USER_UPLOAD_PROFILE_PICTURE_REQUEST,
 } from "../constants/UserConstants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { local } from "../config/config";
-import { baseurl } from "../config/config";
+import { local } from "../../config/config";
+import { baseurl } from "../../config/config";
 
 export const userLoginAction = (email, password) => async (dispatch) => {
     dispatch({ type: USER_LOGIN_REQUEST, payload: { email, password } });
@@ -75,7 +78,7 @@ export const userRegisterAction =
             );
             dispatch({ type: USER_REGISTER_SUCCESS, payload: data });
             toast.success("Registration success");
-            toast.info("Verification email sent")
+            toast.info("Verification email sent");
         } catch (error) {
             dispatch({
                 type: USER_REGISTER_FAIL,
@@ -185,3 +188,41 @@ export const userVerifyAccountAction = (registerToken) => async (dispatch) => {
         toast.error("Account verify fail");
     }
 };
+
+export const userUpdateProfilePictureAction =
+    (file) => async (dispatch, getState) => {
+        dispatch({
+            type: USER_UPLOAD_PROFILE_PICTURE_REQUEST,
+        });
+        const {
+            userLoginData: { userData },
+        } = getState();
+        try {
+            const bodyFormData = new FormData();
+            bodyFormData.append("image", file);
+            const { data } = await Axios.post(
+                `${local === true ? baseurl : ""}/api/uploads/profile-picture`,
+                bodyFormData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Authorization: `Bearer ${userData.token}`,
+                    },
+                }
+            );
+            dispatch({
+                type: USER_UPLOAD_PROFILE_PICTURE_SUCCESS,
+                payload: data,
+            });
+            toast.success("Image upload success");
+        } catch (error) {
+            dispatch({
+                type: USER_UPLOAD_PROFILE_PICTURE_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message,
+            });
+            toast.error("Image upload fail");
+        }
+    };

@@ -131,7 +131,7 @@ const Register = () => {
                         {inputs.map((input) => (
                             <div key={input.id}>
                                 <label htmlFor={input.labelFor}>
-                                    {input.required && "*"} {input.label}
+                                    {input.label}
                                 </label>
                                 <input
                                     type={input.type}

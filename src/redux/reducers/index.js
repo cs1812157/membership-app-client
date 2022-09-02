@@ -6,6 +6,7 @@ import {
     userUpdateAccountReducer,
     userNewPasswordReducer,
     userVerifyAccountReducer,
+    userUploadProfilePictureReducer,
 } from "./UserReducers";
 
 export default combineReducers({
@@ -15,4 +16,5 @@ export default combineReducers({
     userResetPasswordData: userResetPasswordReducer,
     userNewPasswordData: userNewPasswordReducer,
     userVerifyAccountData: userVerifyAccountReducer,
+    userUploadProfilePictureData: userUploadProfilePictureReducer,
 });
