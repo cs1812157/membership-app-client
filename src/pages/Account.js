@@ -132,6 +132,7 @@ const Account = () => {
         dispatch(
             userUpdateAccountAction({
                 userID: userData._id,
+                image: formValues.image,
                 name: formValues.name,
                 email: formValues.email,
                 newPassword: formValues.newPassword,
