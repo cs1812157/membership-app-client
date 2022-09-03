@@ -12,35 +12,37 @@ import { ToastContainer } from "react-toastify";
 import NotFound from "./pages/NotFound";
 import VerifyAccount from "./pages/VerifyAccount";
 import { useDispatch, useSelector } from "react-redux";
-import { userUpdatedLoginAction } from "./redux/actions/UserActions";
+import { userVerifyLoginAction } from "./redux/actions/UserActions";
 import { useEffect } from "react";
-import { USER_LOGOUT } from "./redux/constants/UserConstants";
+import {
+    USER_LOGOUT,
+    USER_VERIFY_LOGIN_RESET,
+} from "./redux/constants/UserConstants";
 
 function App() {
     const dispatch = useDispatch();
 
     const { userData } = useSelector((state) => state.userLoginData);
-    const { error } = useSelector((state) => state.userUpdatedLoginData);
+    const { tokenDetails } = useSelector((state) => state.userVerifyLoginData);
 
     useEffect(() => {
-        if (!userData?.providedPassword) {
-            dispatch({ type: USER_LOGOUT });
+        if (userData?.email) {
+            dispatch(userVerifyLoginAction(userData?.email));
         } else {
-            dispatch(
-                userUpdatedLoginAction(
-                    userData?.email,
-                    userData?.providedPassword
-                )
-            );
+            dispatch({ type: USER_LOGOUT });
+            localStorage.removeItem("userData");
         }
     }, [dispatch, userData]);
 
     useEffect(() => {
-        if (error) {
-            dispatch({ type: USER_LOGOUT });
+        if (userData?.token && tokenDetails?.loginToken) {
+            if (tokenDetails?.loginToken !== userData?.token) {
+                dispatch({ type: USER_LOGOUT });
+                dispatch({ type: USER_VERIFY_LOGIN_RESET });
+                localStorage.removeItem("userData");
+            }
         }
-    }, [dispatch, error]);
-
+    }, [dispatch, userData?.token, tokenDetails?.loginToken]);
     return (
         <div className="App">
             <BrowserRouter>

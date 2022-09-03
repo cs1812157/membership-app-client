@@ -23,9 +23,10 @@ import {
     USER_UPLOAD_PROFILE_PICTURE_FAIL,
     USER_UPLOAD_PROFILE_PICTURE_SUCCESS,
     USER_UPLOAD_PROFILE_PICTURE_REQUEST,
-    USER_UPDATED_LOGIN_SUCCESS,
-    USER_UPDATED_LOGIN_FAIL,
-    USER_UPDATED_LOGIN_REQUEST,
+    USER_VERIFY_LOGIN_REQUEST,
+    USER_VERIFY_LOGIN_SUCCESS,
+    USER_VERIFY_LOGIN_FAIL,
+    USER_VERIFY_LOGIN_RESET,
 } from "../constants/UserConstants";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -57,32 +58,30 @@ export const userLoginAction = (email, password) => async (dispatch) => {
     }
 };
 
-export const userUpdatedLoginAction =
-    (email, providedPassword) => async (dispatch) => {
-        dispatch({
-            type: USER_UPDATED_LOGIN_REQUEST,
-            payload: { email, providedPassword },
-        });
-        try {
-            const { data } = await Axios.post(
-                `${local === true ? baseurl : ""}/api/users/updated-login`,
-                {
-                    email,
-                    providedPassword,
-                }
-            );
-            dispatch({ type: USER_UPDATED_LOGIN_SUCCESS, payload: data });
-            localStorage.setItem("userData", JSON.stringify(data));
-        } catch (error) {
-            dispatch({
-                type: USER_UPDATED_LOGIN_FAIL,
-                payload:
-                    error.response && error.response.data.message
-                        ? error.response.data.message
-                        : error.message,
-            });
-        }
-    };
+export const userVerifyLoginAction = (email) => async (dispatch, getState) => {
+    dispatch({ type: USER_VERIFY_LOGIN_REQUEST, payload: email });
+    const {
+        userLoginData: { userData },
+    } = getState();
+    try {
+        const { data } = await Axios.post(
+            `${local === true ? baseurl : ""}/api/users/verify-login`,
+            {
+                email,
+            },
+            {
+                headers: { Authorization: `Bearer ${userData.token}` },
+            }
+        );
+        dispatch({ type: USER_VERIFY_LOGIN_SUCCESS, payload: data });
+    } catch (error) {
+        const message =
+            error.response && error.response.data.message
+                ? error.response.data.message
+                : error.message;
+        dispatch({ type: USER_VERIFY_LOGIN_FAIL, payload: message });
+    }
+};
 
 export const logoutAction = () => (dispatch) => {
     localStorage.removeItem("userData");
@@ -134,13 +133,10 @@ export const userUpdateAccountAction = (user) => async (dispatch, getState) => {
                 headers: { Authorization: `Bearer ${userData.token}` },
             }
         );
-        const newData = {
-            ...data,
-            providedPassword: userData.providedPassword,
-        };
-        dispatch({ type: USER_UPDATE_ACCOUNT_SUCCESS, payload: newData });
-        dispatch({ type: USER_LOGIN_SUCCESS, payload: newData });
-        localStorage.setItem("userData", JSON.stringify(newData));
+        dispatch({ type: USER_UPDATE_ACCOUNT_SUCCESS, payload: data });
+        dispatch({ type: USER_VERIFY_LOGIN_RESET });
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
+        localStorage.setItem("userData", JSON.stringify(data));
         toast.success("Account update success");
     } catch (error) {
         const message =

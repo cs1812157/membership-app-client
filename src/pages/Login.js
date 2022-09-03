@@ -120,6 +120,7 @@ const Login = () => {
             navigate("/dashboard");
         } else {
             // TODO: Remove them if they're not useful
+            localStorage.removeItem("userData");
             dispatch({ type: USER_LOGOUT });
         }
     }, [navigate, userData, dispatch]);

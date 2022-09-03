@@ -12,10 +12,7 @@ import { USER_UPLOAD_PROFILE_PICTURE_RESET } from "../redux/constants/UserConsta
 const Account = () => {
     const dispatch = useDispatch();
 
-    // const { userData } = useSelector((state) => state.userLoginData);
-    const { userData: updatedUserData } = useSelector(
-        (state) => state.userUpdatedLoginData
-    );
+    const { userData } = useSelector((state) => state.userLoginData);
     const { loading, error } = useSelector(
         (state) => state.userUpdateAccountData
     );
@@ -92,22 +89,22 @@ const Account = () => {
     ];
 
     useEffect(() => {
-        if (updatedUserData) {
+        if (userData) {
             setFormValues({
                 ...formValues,
-                image: updatedUserData.image,
-                name: updatedUserData.name,
-                email: updatedUserData.email,
+                image: userData.image,
+                name: userData.name,
+                email: userData.email,
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updatedUserData]);
+    }, [userData]);
 
     useEffect(() => {
         if (image) {
             dispatch(
                 userUpdateAccountAction({
-                    userID: updatedUserData._id,
+                    userID: userData._id,
                     image: image,
                 })
             );
@@ -143,7 +140,7 @@ const Account = () => {
         e.preventDefault();
         dispatch(
             userUpdateAccountAction({
-                userID: updatedUserData._id,
+                userID: userData._id,
                 name: formValues.name,
                 email: formValues.email,
                 newPassword: formValues.newPassword,
