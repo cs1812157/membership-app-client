@@ -11,7 +11,8 @@ import {
 const Account = () => {
     const dispatch = useDispatch();
 
-    const { userData } = useSelector((state) => state.userLoginData);
+    // const { userData } = useSelector((state) => state.userLoginData);
+    const { userData: updatedUserData } = useSelector((state) => state.userUpdatedLoginData);
     const { loading, error } = useSelector(
         (state) => state.userUpdateAccountData
     );
@@ -88,16 +89,16 @@ const Account = () => {
     ];
 
     useEffect(() => {
-        if (userData) {
+        if (updatedUserData) {
             setFormValues({
                 ...formValues,
-                image: userData.image,
-                name: userData.name,
-                email: userData.email,
+                image: updatedUserData.image,
+                name: updatedUserData.name,
+                email: updatedUserData.email,
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [userData]);
+    }, [updatedUserData]);
 
     useEffect(() => {
         if (image) {
@@ -138,7 +139,7 @@ const Account = () => {
         e.preventDefault();
         dispatch(
             userUpdateAccountAction({
-                userID: userData._id,
+                userID: updatedUserData._id,
                 image: formValues.image,
                 name: formValues.name,
                 email: formValues.email,
