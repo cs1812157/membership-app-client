@@ -24,7 +24,7 @@ function App() {
         if (userData) {
             dispatch(userUpdatedLoginAction(userData?.email))
         }
-    }, [dispatch, userData])
+    }, [userData])
     
     return (
         <div className="App">
