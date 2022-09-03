@@ -57,27 +57,32 @@ export const userLoginAction = (email, password) => async (dispatch) => {
     }
 };
 
-export const userUpdatedLoginAction = (email) => async (dispatch) => {
-    dispatch({ type: USER_UPDATED_LOGIN_REQUEST, payload: { email } });
-    try {
-        const { data } = await Axios.post(
-            `${local === true ? baseurl : ""}/api/users/updated-login`,
-            {
-                email,
-            }
-        );
-        dispatch({ type: USER_UPDATED_LOGIN_SUCCESS, payload: data });
-        localStorage.setItem("userData", JSON.stringify(data));
-    } catch (error) {
+export const userUpdatedLoginAction =
+    (email, providedPassword) => async (dispatch) => {
         dispatch({
-            type: USER_UPDATED_LOGIN_FAIL,
-            payload:
-                error.response && error.response.data.message
-                    ? error.response.data.message
-                    : error.message,
+            type: USER_UPDATED_LOGIN_REQUEST,
+            payload: { email, providedPassword },
         });
-    }
-};
+        try {
+            const { data } = await Axios.post(
+                `${local === true ? baseurl : ""}/api/users/updated-login`,
+                {
+                    email,
+                    providedPassword,
+                }
+            );
+            dispatch({ type: USER_UPDATED_LOGIN_SUCCESS, payload: data });
+            localStorage.setItem("userData", JSON.stringify(data));
+        } catch (error) {
+            dispatch({
+                type: USER_UPDATED_LOGIN_FAIL,
+                payload:
+                    error.response && error.response.data.message
+                        ? error.response.data.message
+                        : error.message,
+            });
+        }
+    };
 
 export const logoutAction = () => (dispatch) => {
     localStorage.removeItem("userData");

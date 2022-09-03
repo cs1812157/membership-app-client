@@ -14,18 +14,33 @@ import VerifyAccount from "./pages/VerifyAccount";
 import { useDispatch, useSelector } from "react-redux";
 import { userUpdatedLoginAction } from "./redux/actions/UserActions";
 import { useEffect } from "react";
+import { USER_LOGOUT } from "./redux/constants/UserConstants";
 
 function App() {
     const dispatch = useDispatch();
 
     const { userData } = useSelector((state) => state.userLoginData);
+    const { error } = useSelector((state) => state.userUpdatedLoginData);
 
     useEffect(() => {
-        if (userData) {
-            dispatch(userUpdatedLoginAction(userData?.email))
+        if (!userData?.providedPassword) {
+            dispatch({ type: USER_LOGOUT });
+        } else {
+            dispatch(
+                userUpdatedLoginAction(
+                    userData?.email,
+                    userData?.providedPassword
+                )
+            );
         }
-    }, [dispatch, userData])
-    
+    }, [dispatch, userData]);
+
+    useEffect(() => {
+        if (error) {
+            dispatch({ type: USER_LOGOUT });
+        }
+    }, [dispatch, error]);
+
     return (
         <div className="App">
             <BrowserRouter>

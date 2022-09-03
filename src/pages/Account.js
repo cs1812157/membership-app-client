@@ -104,6 +104,7 @@ const Account = () => {
         if (image) {
             dispatch(
                 userUpdateAccountAction({
+                    userID: updatedUserData._id,
                     image: image,
                 })
             );
@@ -140,7 +141,6 @@ const Account = () => {
         dispatch(
             userUpdateAccountAction({
                 userID: updatedUserData._id,
-                image: formValues.image,
                 name: formValues.name,
                 email: formValues.email,
                 newPassword: formValues.newPassword,
