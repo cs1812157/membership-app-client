@@ -103,7 +103,7 @@ const Account = () => {
         if (image) {
             dispatch(
                 userUpdateAccountAction({
-                    image: formValues.image,
+                    image: image,
                 })
             );
 
