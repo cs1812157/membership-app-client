@@ -11,8 +11,21 @@ import Header from "./components/Header";
 import { ToastContainer } from "react-toastify";
 import NotFound from "./pages/NotFound";
 import VerifyAccount from "./pages/VerifyAccount";
+import { useDispatch, useSelector } from "react-redux";
+import { userUpdatedLoginAction } from "./redux/actions/UserActions";
+import { useEffect } from "react";
 
 function App() {
+    const dispatch = useDispatch();
+
+    const { userData } = useSelector((state) => state.userLoginData);
+
+    useEffect(() => {
+        if (userData) {
+            dispatch(userUpdatedLoginAction(userData?.email))
+        }
+    }, [dispatch, userData])
+    
     return (
         <div className="App">
             <BrowserRouter>
