@@ -7,6 +7,7 @@ import {
     userUpdateAccountAction,
     userUpdateProfilePictureAction,
 } from "../redux/actions/UserActions";
+import { USER_UPLOAD_PROFILE_PICTURE_RESET } from "../redux/constants/UserConstants";
 
 const Account = () => {
     const dispatch = useDispatch();
