@@ -108,7 +108,7 @@ const Account = () => {
                     image: image,
                 })
             );
-
+            dispatch({ type: USER_UPLOAD_PROFILE_PICTURE_RESET });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image]);
