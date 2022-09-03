@@ -15,7 +15,9 @@ const Account = () => {
     const { loading, error } = useSelector(
         (state) => state.userUpdateAccountData
     );
-    const { image } = useSelector((state) => state.userUploadProfilePictureData);
+    const { image } = useSelector(
+        (state) => state.userUploadProfilePictureData
+    );
 
     const initialFormValues = {
         image: "",
@@ -99,7 +101,12 @@ const Account = () => {
 
     useEffect(() => {
         if (image) {
-            setFormValues({ ...formValues, image: image });
+            dispatch(
+                userUpdateAccountAction({
+                    image: formValues.image,
+                })
+            );
+
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [image]);
@@ -172,6 +179,7 @@ const Account = () => {
                                         formValues.image
                                             ? baseurl2 + formValues.image
                                             : `${baseurl2}/uploads/empty.jpg`
+                                            
                                     }
                                     alt="img"
                                 ></img>
