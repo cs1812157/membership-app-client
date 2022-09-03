@@ -13,7 +13,9 @@ const Account = () => {
     const dispatch = useDispatch();
 
     // const { userData } = useSelector((state) => state.userLoginData);
-    const { userData: updatedUserData } = useSelector((state) => state.userUpdatedLoginData);
+    const { userData: updatedUserData } = useSelector(
+        (state) => state.userUpdatedLoginData
+    );
     const { loading, error } = useSelector(
         (state) => state.userUpdateAccountData
     );
@@ -181,7 +183,6 @@ const Account = () => {
                                         formValues.image
                                             ? baseurl2 + formValues.image
                                             : `${baseurl2}/uploads/empty.jpg`
-                                            
                                     }
                                     alt="img"
                                 ></img>

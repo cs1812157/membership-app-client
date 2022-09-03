@@ -134,9 +134,13 @@ export const userUpdateAccountAction = (user) => async (dispatch, getState) => {
                 headers: { Authorization: `Bearer ${userData.token}` },
             }
         );
-        dispatch({ type: USER_UPDATE_ACCOUNT_SUCCESS, payload: data });
-        dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
-        localStorage.setItem("userData", JSON.stringify(data));
+        const newData = {
+            ...data,
+            providedPassword: userData.providedPassword,
+        };
+        dispatch({ type: USER_UPDATE_ACCOUNT_SUCCESS, payload: newData });
+        dispatch({ type: USER_LOGIN_SUCCESS, payload: newData });
+        localStorage.setItem("userData", JSON.stringify(newData));
         toast.success("Account update success");
     } catch (error) {
         const message =
